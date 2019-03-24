@@ -1,12 +1,12 @@
 {
-  "url": "http://ttt.technology",
-  "home": "http://ttt.technology",
-  "title": "WebGL Template",
-  "description": "A template for WebGL",
-  "keywords": "webgl, template",
+  "url": "http://garden.ttt.technology",
+  "home": "http://garden.ttt.technology",
+  "title": "Garden",
+  "description": "Enjoy the flowers",
+  "keywords": "garden, flowers, flower garden, ttt, technology",
   "author": "Thijs van Hoof",
   "themeColor": "#000000",
-  "tracking": "UA-48095856-X",
+  "tracking": "UA-48095856-8",
   "fbAdmin": "100001843696745",
   "twitter": "@navFooh"
 }

@@ -1,6 +1,6 @@
 {
-  "name": "web-gl-template",
-  "version": "0.3.0",
+  "name": "garden.ttt.technology",
+  "version": "1.0.0",
   "scripts": {
     "start": "gulp",
     "build": "gulp --dist"
