@@ -1,0 +1,32 @@
+.logo {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	padding: 1.5rem;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none;
+	transform: translateX(-50%);
+
+	.logo-letter {
+		display: inline-block;
+		margin: 0 1px;
+		pointer-events: none;
+
+		.mask-out {
+			width: 6px;
+			margin: 0 auto;
+			overflow: hidden;
+			&:first-child { width: 26px; }
+
+			.line {
+				background: $grey;
+				&.h1 { height: 1px; }
+				&.h2 { height: 2px; }
+				&.h3 { height: 3px; }
+				&.h4 { height: 4px; }
+			}
+		}
+	}
+}

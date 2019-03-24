@@ -1,0 +1,8 @@
+#preloader {
+	@include fill();
+	background: $black;
+
+	.text {
+		@include center-text();
+	}
+}

@@ -1,0 +1,15 @@
+.overlay {
+	@include fill(fixed);
+
+	.background {
+		@include fill();
+		cursor: pointer;
+		background: rgba($black, 0.7);
+	}
+
+	.modal {
+		@include center();
+		padding: 1.5rem;
+		background: $black;
+	}
+}

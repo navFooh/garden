@@ -1,0 +1,44 @@
+a:not(.logo) {
+	display: inline-block;
+	position: relative;
+	color: $green;
+	cursor: pointer;
+	text-decoration: none;
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		background: $green;
+		height: 1px;
+	}
+
+	&::before {
+		top: calc(50% + 0.0625rem);
+		left: -0.25rem;
+		width: calc(100% + 0.5rem);
+		transform: scaleX(0);
+		transition: transform 150ms $easeInCubic 0ms;
+	}
+
+	&::after {
+		top: calc(50% + 0.625rem);
+		left: 0;
+		width: 100%;
+		transform: scaleX(1);
+		transition: transform 300ms $easeOutQuad 100ms;
+	}
+
+	&:hover {
+
+		&::before {
+			transform: scaleX(1);
+			transition: transform 300ms $easeOutQuad 100ms;
+		}
+
+		&::after {
+			transform: scaleX(0);
+			transition: transform 150ms $easeInCubic 0ms;
+		}
+	}
+}

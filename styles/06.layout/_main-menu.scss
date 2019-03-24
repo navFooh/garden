@@ -1,0 +1,23 @@
+#main-menu {
+
+	.button {
+		position: absolute;
+		width: 74px;
+		height: 68px;
+		color: $grey;
+		cursor: pointer;
+		text-align: center;
+		line-height: 68px;
+		font-family: 'PT Mono', 'Courier New', monospace;
+		transition: color 800ms $easeOutExpo;
+
+		&:hover {
+			color: $white;
+		}
+
+		&.info {
+			top: 0;
+			left: 0;
+		}
+	}
+}
