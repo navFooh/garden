@@ -2,8 +2,9 @@ define([
 	'backbone-webgl',
 	'three',
 	'model/display-model',
+	'model/state-model',
 	'model/webgl-model'
-], function (WebGL, THREE, DisplayModel, WebGLModel) {
+], function (WebGL, THREE, DisplayModel, StateModel, WebGLModel) {
 
 	return WebGL.extend({
 
@@ -17,12 +18,13 @@ define([
 
 			this.renderer.autoClear = true;
 			this.renderer.sortObjects = false;
-			this.renderer.setClearColor(0x000000, 1);
+			this.renderer.setClearColor(StateModel.get('fogColor'), 1);
 			this.renderer.setPixelRatio(window.devicePixelRatio || 1);
 
 			this.onResize();
 			this.listenTo(DisplayModel, 'resize', this.onResize);
 			this.listenTo(WebGLModel, 'render', this.render);
+			this.listenTo(StateModel, StateModel.UPDATE.FOG_COLOR, this.onUpdateFogColor);
 		},
 
 		onResize: function () {
@@ -33,6 +35,10 @@ define([
 
 		render: function (scene, camera) {
 			this.renderer.render(scene, camera);
+		},
+
+		onUpdateFogColor: function (fogColor) {
+			this.renderer.setClearColor(fogColor, 1);
 		}
 	});
 });

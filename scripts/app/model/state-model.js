@@ -6,6 +6,10 @@ define([
 
 	var StateModel = Backbone.Model.extend({
 
+		UPDATE: {
+			FOG_COLOR: 0
+		},
+
 		defaults: {
 			width: 800,
 			depth: 400,
@@ -49,6 +53,7 @@ define([
 			var fogColor = this.get('fogColor');
 			var fogProps = this.get('fogProps');
 			fogColor.setHSL(fogProps.h, fogProps.s, fogProps.l);
+			this.trigger(this.UPDATE.FOG_COLOR, fogColor);
 		}
 	});
 
