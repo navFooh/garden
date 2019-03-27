@@ -1,6 +1,9 @@
 uniform sampler2D texture;
 uniform float     textureCols;
 uniform float     textureRows;
+uniform vec3      fogColor;
+uniform float     fogNear;
+uniform float     fogFar;
 
 varying float     vRotation;
 varying float     vTextureIndex;
@@ -23,6 +26,10 @@ void main() {
   );
 
   vec2 textureCoord = pointCoordRotated * drawSize + textureCenter - 0.5 * drawSize;
+  vec4 textureColor = texture2D(texture, textureCoord);
 
-  gl_FragColor = texture2D(texture, textureCoord);
+  float depth = gl_FragCoord.z / gl_FragCoord.w;
+  float fogFactor = smoothstep(fogNear, fogFar, depth);
+
+  gl_FragColor = mix(textureColor, vec4(fogColor, textureColor.w), fogFactor);
 }

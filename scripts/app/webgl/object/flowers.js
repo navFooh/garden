@@ -19,9 +19,12 @@ define([
 			this.geometry = new THREE.BufferGeometry();
 			this.material = new THREE.ShaderMaterial({
 				uniforms: {
-					texture: { value: null },
-					textureCols: { value: 4 },
-					textureRows: { value: 5 }
+					texture: 		{ value: null },
+					textureCols: 	{ value: 4 },
+					textureRows: 	{ value: 5 },
+					fogColor: 		{ value: StateModel.get('fogColor') },
+					fogNear: 		{ value: StateModel.get('fogNear') },
+					fogFar: 		{ value: StateModel.get('fogFar') }
 				},
 				vertexShader:   flowerVert,
 				fragmentShader: flowerFrag,
