@@ -14,7 +14,7 @@ define([
 
 			new Ambient({ parent: this.scene });
 			new Directional({ parent: this.scene });
-			new Floor({ parent: this.scene, radius: 300 });
+			new Floor({ parent: this.scene });
 		}
 	});
 });
