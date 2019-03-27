@@ -1,20 +1,28 @@
-uniform sampler2D textures[3];
-uniform vec3 fogColor;
-uniform float fogNear;
-uniform float fogFar;
-varying float vRotation;
-varying float vTexIndex;
+uniform sampler2D texture;
+uniform float     textureCols;
+uniform float     textureRows;
+
+varying float     vRotation;
+varying float     vTextureIndex;
 
 void main() {
-  float mid = 0.5;
-  float depth = gl_FragCoord.z / gl_FragCoord.w;
-  float fogFactor = smoothstep( fogNear, fogFar, depth );
-  vec2 rotated = vec2(
-    cos(vRotation) * (gl_PointCoord.x - mid) + sin(vRotation) * (gl_PointCoord.y - mid) + mid,
-    cos(vRotation) * (gl_PointCoord.y - mid) - sin(vRotation) * (gl_PointCoord.x - mid) + mid
+  float textureColSize = 1.0 / textureCols;
+  float textureRowSize = 1.0 / textureRows;
+  float textureCol = floor(mod(vTextureIndex + 0.5, textureCols));
+  float textureRow = floor((vTextureIndex + 0.5) / textureCols);
+  float drawSize = textureColSize * 0.7;
+
+  vec2 textureCenter = vec2(
+    (textureCol + 0.5) * textureColSize,
+    (textureRow + 0.5) * textureRowSize
   );
-  if     (vTexIndex < 0.5) gl_FragColor = texture2D(textures[0], rotated);
-  else if(vTexIndex < 1.5) gl_FragColor = texture2D(textures[1], rotated);
-  else                     gl_FragColor = texture2D(textures[2], rotated);
-  gl_FragColor = mix(gl_FragColor, vec4(fogColor, gl_FragColor.w), fogFactor);
+
+  vec2 pointCoordRotated = vec2(
+    cos(vRotation) * (gl_PointCoord.x - 0.5) + sin(vRotation) * (gl_PointCoord.y - 0.5) + 0.5,
+    cos(vRotation) * (gl_PointCoord.y - 0.5) - sin(vRotation) * (gl_PointCoord.x - 0.5) + 0.5
+  );
+
+  vec2 textureCoord = pointCoordRotated * drawSize + textureCenter - 0.5 * drawSize;
+
+  gl_FragColor = texture2D(texture, textureCoord);
 }
