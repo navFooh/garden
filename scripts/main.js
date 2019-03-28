@@ -14,6 +14,7 @@ require.config({
 		'TweenMax':             '../node_modules/gsap/src/uncompressed/TweenMax',
 		'TimelineLite':         '../node_modules/gsap/src/uncompressed/TimelineLite',
 		'TimelineMax':          '../node_modules/gsap/src/uncompressed/TimelineMax',
+		'dat.gui':				'../node_modules/dat.gui/build/dat.gui',
 		'three-lib':            '../node_modules/three/build/three',
 		'three-gltf-loader':    '../node_modules/three/examples/js/loaders/GLTFLoader',
 		'three-projector':      '../node_modules/three/examples/js/renderers/Projector',
