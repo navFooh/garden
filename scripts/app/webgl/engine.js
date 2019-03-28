@@ -10,12 +10,12 @@ define([
 
 		initialize: function (options) {
 
-			this.renderer = new Renderer({ canvas: options.canvas });
-
 			WebGLModel.set({
 				scene: new Scene(),
 				camera: new Camera()
 			});
+
+			this.renderer = new Renderer({ canvas: options.canvas });
 		}
 	});
 });
