@@ -17,6 +17,13 @@ require.config({
 		'three-lib':            '../node_modules/three/build/three',
 		'three-gltf-loader':    '../node_modules/three/examples/js/loaders/GLTFLoader',
 		'three-projector':      '../node_modules/three/examples/js/renderers/Projector',
+		'three-bokeh-shader':   '../node_modules/three/examples/js/shaders/BokehShader',
+		'three-copy-shader':    '../node_modules/three/examples/js/shaders/CopyShader',
+		'three-bokeh-pass':		'../node_modules/three/examples/js/postprocessing/BokehPass',
+		'three-mask-pass':		'../node_modules/three/examples/js/postprocessing/MaskPass',
+		'three-render-pass':	'../node_modules/three/examples/js/postprocessing/RenderPass',
+		'three-shader-pass':	'../node_modules/three/examples/js/postprocessing/ShaderPass',
+		'three-effect-composer':'../node_modules/three/examples/js/postprocessing/EffectComposer',
 		'promise-polyfill':     '../node_modules/promise-polyfill/dist/polyfill',
 		// plugins
 		'backbone-audio':       'plugin/backbone-audio',
@@ -37,6 +44,34 @@ require.config({
 		'three-projector': {
 			deps: ['three'],
 			exports: 'THREE.Projector'
+		},
+		'three-bokeh-shader': {
+			deps: ['three'],
+			exports: 'THREE.BokehShader'
+		},
+		'three-copy-shader': {
+			deps: ['three'],
+			exports: 'THREE.CopyShader'
+		},
+		'three-bokeh-pass': {
+			deps: ['three', 'three-effect-composer', 'three-bokeh-shader'],
+			exports: 'THREE.BokehPass'
+		},
+		'three-mask-pass': {
+			deps: ['three', 'three-effect-composer'],
+			exports: 'THREE.MaskPass'
+		},
+		'three-render-pass': {
+			deps: ['three', 'three-effect-composer'],
+			exports: 'THREE.RenderPass'
+		},
+		'three-shader-pass': {
+			deps: ['three', 'three-effect-composer'],
+			exports: 'THREE.ShaderPass'
+		},
+		'three-effect-composer': {
+			deps: ['three', 'three-copy-shader'],
+			exports: 'THREE.EffectComposer'
 		}
 	}
 });
