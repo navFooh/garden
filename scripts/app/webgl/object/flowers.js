@@ -32,6 +32,8 @@ define([
 				transparent:    true
 			});
 			this.mesh = new THREE.Points(this.geometry, this.material);
+			this.mesh.matrixAutoUpdate = false;
+			this.mesh.updateMatrix();
 			this.parent.add(this.mesh);
 
 			this.createFlowers();

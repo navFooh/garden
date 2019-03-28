@@ -14,6 +14,8 @@ define([
 			this.mesh = new THREE.Mesh(this.geometry, this.material);
 			this.mesh.position.set(0, 0, depth * -0.5);
 			this.mesh.rotation.set(Math.PI * 1.5, 0, 0);
+			this.mesh.matrixAutoUpdate = false;
+			this.mesh.updateMatrix();
 			this.parent.add(this.mesh);
 		}
 	});
