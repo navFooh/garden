@@ -48,19 +48,19 @@ define([
 			var spacing = 5;
 			var poisson = new PoissonDiskSampling([width, depth], spacing);
 			var flowers = poisson.fill();
-			var count = flowers.length;
 
 			flowers.sort(function (a, b) {
 				return a[1] - b[1];
 			});
 
-			this.sizes = new Float32Array(count);
-			this.scales = new Float32Array(count);
-			this.positions = new Float32Array(count * 3);
-			this.rotations = new Float32Array(count);
-			this.textureIndexes = new Float32Array(count);
+			this.count = flowers.length
+			this.sizes = new Float32Array(this.count);
+			this.scales = new Float32Array(this.count);
+			this.positions = new Float32Array(this.count * 3);
+			this.rotations = new Float32Array(this.count);
+			this.textureIndexes = new Float32Array(this.count);
 
-			for (var i = 0; i < count; i++) {
+			for (var i = 0; i < this.count; i++) {
 				this.sizes[i] = 75 + 50 * Math.random();
 				this.scales[i] = 1;
 				this.positions[i * 3] = flowers[i][0] - width * 0.5;
@@ -76,7 +76,7 @@ define([
 			this.geometry.addAttribute('rotation', new THREE.BufferAttribute(this.rotations, 1).setDynamic(true));
 			this.geometry.addAttribute('textureIndex', new THREE.BufferAttribute(this.textureIndexes, 1).setDynamic(true));
 
-			console.log('Created ' + count + ' flowers');
+			console.log('Created ' + this.count + ' flowers');
 		},
 
 		loadTextures: function () {
