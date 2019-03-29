@@ -17,7 +17,6 @@ require.config({
 		'dat.gui':				'../node_modules/dat.gui/build/dat.gui',
 		'three-lib':            '../node_modules/three/build/three',
 		'three-gltf-loader':    '../node_modules/three/examples/js/loaders/GLTFLoader',
-		'three-projector':      '../node_modules/three/examples/js/renderers/Projector',
 		'three-bokeh-shader':   '../node_modules/three/examples/js/shaders/BokehShader',
 		'three-copy-shader':    '../node_modules/three/examples/js/shaders/CopyShader',
 		'three-bokeh-pass':		'../node_modules/three/examples/js/postprocessing/BokehPass',
@@ -41,10 +40,6 @@ require.config({
 		'three-gltf-loader': {
 			deps: ['three', 'promise-polyfill'],
 			exports: 'THREE.GLTFLoader'
-		},
-		'three-projector': {
-			deps: ['three'],
-			exports: 'THREE.Projector'
 		},
 		'three-bokeh-shader': {
 			deps: ['three'],
