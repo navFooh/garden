@@ -54,6 +54,9 @@ define([
 			var fogProps = this.get('fogProps');
 			fogColor.setHSL(fogProps.h, fogProps.s, fogProps.l);
 			this.trigger(this.UPDATE.FOG_COLOR, fogColor);
+		},
+
+		updatePointer: function (x, y) {
 		}
 	});
 
