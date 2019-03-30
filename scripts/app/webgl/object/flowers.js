@@ -131,8 +131,11 @@ define([
 			}
 
 			StateModel.set('pointerMoving', false);
-			this.geometry.attributes.textureIndex.needsUpdate = true;
 			this.geometry.attributes.rotation.needsUpdate = true;
+
+			if (transitionsLength) {
+				this.geometry.attributes.textureIndex.needsUpdate = true;
+			}
 		}
 	});
 });
