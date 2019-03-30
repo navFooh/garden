@@ -93,7 +93,9 @@ define([
 		},
 
 		update: function (delta, elapsed) {
-			var deltaX, deltaZ, distance, cross;
+			var i, j, deltaX, deltaZ, distance, cross;
+			var transitions = StateModel.get('transitions');
+			var transitionsLength = transitions.length;
 			var pointerPosition = StateModel.get('pointerPosition');
 			var pointerDirection = StateModel.get('pointerDirection');
 			var pointerMoving = StateModel.get('pointerMoving');
@@ -101,7 +103,22 @@ define([
 			var pointerSpeed = StateModel.get('pointerSpeed');
 			var deltaClamped = Math.min(0.1, delta);
 
-			for (var i = 0; i < this.count; i++) {
+			for (i = 0; i < this.count; i++) {
+
+				// update texture
+				for (j = 0; j < transitionsLength; j++) {
+					if (this.transitionIds[i] == transitions[j].id) break;
+					deltaX = this.positions[i * 3] - transitions[j].position.x;
+					deltaZ = this.positions[i * 3 + 2] - transitions[j].position.z;
+					distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+					if (distance < transitions[j].radius) {
+						this.transitionIds[i] = transitions[j].id;
+						this.textureIndexes[i] = _.sample(transitions[j].textures);
+						break;
+					}
+				}
+
+				// update rotation
 				deltaX = this.positions[i * 3] - pointerPosition.x;
 				deltaZ = this.positions[i * 3 + 2] - pointerPosition.z;
 				distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
@@ -114,6 +131,7 @@ define([
 			}
 
 			StateModel.set('pointerMoving', false);
+			this.geometry.attributes.textureIndex.needsUpdate = true;
 			this.geometry.attributes.rotation.needsUpdate = true;
 		}
 	});
