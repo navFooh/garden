@@ -42,8 +42,8 @@ define([
 				this.intersects = this.raycaster.intersectObject(this.mesh);
 				if (this.intersects.length) {
 					var x = this.intersects[0].point.x;
-					var y = this.intersects[0].point.z;
-					StateModel.updatePointer(x, y);
+					var z = this.intersects[0].point.z;
+					StateModel.updatePointer(x, z);
 				}
 			}
 		}

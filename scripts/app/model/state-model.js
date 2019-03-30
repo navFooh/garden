@@ -56,7 +56,7 @@ define([
 			this.trigger(this.UPDATE.FOG_COLOR, fogColor);
 		},
 
-		updatePointer: function (x, y) {
+		updatePointer: function (x, z) {
 		}
 	});
 
