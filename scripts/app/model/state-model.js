@@ -17,6 +17,7 @@ define([
 			fogColor: new THREE.Color(),
 			fogNear: 200,
 			fogFar: 500,
+			transitions: [],
 			availableTextures: _.range(19),
 			pointerPosition: { x: 0, z: 0 },
 			pointerDirection: { x: 0, z: 0 },
@@ -48,6 +49,29 @@ define([
 				onUpdate: this.updateFogColor,
 				onUpdateScope: this
 			});
+
+			// texture transition
+			var width = this.get('width');
+			var depth = this.get('depth');
+			var transitions = this.get('transitions');
+			var pointerPosition = this.get('pointerPosition');
+			var availableTextures = this.get('availableTextures');
+			var transition = {
+				id: Date.now(),
+				radius: 0,
+				position: {
+					x: pointerPosition.x,
+					z: pointerPosition.z
+				},
+				textures: _.sample(availableTextures, 3)
+			};
+			TweenLite.to(transition, 3, {
+				radius: Math.sqrt(width * width + depth * depth),
+				ease: Power1.easeInOut,
+				onComplete: transitions.pop,
+				onCompleteScope: transitions
+			});
+			transitions.unshift(transition);
 		},
 
 		getNewFogProps: function () {
