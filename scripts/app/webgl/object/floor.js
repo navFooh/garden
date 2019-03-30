@@ -26,8 +26,15 @@ define([
 			this.raycaster = new THREE.Raycaster();
 			this.intersects = [];
 
+			this.listenTo(PointerModel, PointerModel.EVENT.CLICK, this.onPointerClick);
 			this.listenTo(PointerModel, PointerModel.EVENT.MOVE, this.onPointerMove);
 			this.listenTo(WebGLModel, 'update', this.update);
+		},
+
+		onPointerClick: function () {
+			if (this.intersects.length) {
+				StateModel.startTransition();
+			}
 		},
 
 		onPointerMove: function () {
