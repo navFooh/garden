@@ -105,7 +105,7 @@ define([
 
 			for (i = 0; i < this.count; i++) {
 
-				// update texture
+				// transition influence
 				for (j = 0; j < transitionsLength; j++) {
 					if (this.transitionIds[i] == transitions[j].id) break;
 					deltaX = this.positions[i * 3] - transitions[j].position.x;
@@ -118,7 +118,7 @@ define([
 					}
 				}
 
-				// update rotation
+				// pointer influence
 				deltaX = this.positions[i * 3] - pointerPosition.x;
 				deltaZ = this.positions[i * 3 + 2] - pointerPosition.z;
 				distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
@@ -126,6 +126,8 @@ define([
 					cross = pointerDirection.x * (deltaZ / distance) - pointerDirection.z * (deltaX / distance);
 					this.velocities[i] += (1 - distance / pointerRange) * deltaClamped * 0.1 * pointerSpeed * cross;
 				}
+
+				// update rotation
 				this.velocities[i] -= this.velocities[i] * deltaClamped * 0.5;
 				this.rotations[i] += this.velocities[i];
 			}
