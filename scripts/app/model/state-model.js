@@ -32,18 +32,19 @@ define([
 		},
 
 		startTransition: function () {
+
+			// fog transition
 			var fogProps = this.get('fogProps');
 			var newFogProps = this.getNewFogProps();
 			if (newFogProps.h - fogProps.h > 0.5)
 				fogProps.h += 1;
 			if (fogProps.h - newFogProps.h > 0.5)
 				fogProps.h -= 1;
-			TweenLite.killTweensOf(fogProps);
-			TweenLite.to(fogProps, 3, {
+			TweenLite.to(fogProps, 2, {
 				h: newFogProps.h,
 				s: newFogProps.s,
 				l: newFogProps.l,
-				ease: Power3.easeOut,
+				ease: Power3.easeInOut,
 				onUpdate: this.updateFogColor,
 				onUpdateScope: this
 			});
