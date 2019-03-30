@@ -18,6 +18,7 @@ define([
 			fogNear: 200,
 			fogFar: 500,
 			transitions: [],
+			transitionId: 0,
 			availableTextures: _.range(19),
 			pointerPosition: { x: 0, z: 0 },
 			pointerDirection: { x: 0, z: 0 },
@@ -54,10 +55,15 @@ define([
 			var width = this.get('width');
 			var depth = this.get('depth');
 			var transitions = this.get('transitions');
+			var transitionId = this.get('transitionId');
 			var pointerPosition = this.get('pointerPosition');
 			var availableTextures = this.get('availableTextures');
+
+			transitionId = ++transitionId % 256;
+			this.set('transitionId', transitionId);
+
 			var transition = {
-				id: Date.now(),
+				id: transitionId,
 				radius: 0,
 				position: {
 					x: pointerPosition.x,
