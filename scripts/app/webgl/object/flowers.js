@@ -13,9 +13,6 @@ define([
 	return WebGL.extend({
 
 		initialize: function () {
-			this.availableTextures = _.range(19);
-			this.selectedTextures = _.sample(this.availableTextures, 3);
-
 			this.geometry = new THREE.BufferGeometry();
 			this.material = new THREE.ShaderMaterial({
 				uniforms: {
@@ -61,6 +58,8 @@ define([
 			this.velocities = new Float32Array(this.count);
 			this.textureIndexes = new Float32Array(this.count);
 
+			var textures = _.sample(StateModel.get('availableTextures'), 3);
+
 			for (var i = 0; i < this.count; i++) {
 				this.sizes[i] = 75 + 50 * Math.random();
 				this.scales[i] = 1;
@@ -69,7 +68,7 @@ define([
 				this.positions[i * 3 + 2] = flowers[i][1] - depth;
 				this.rotations[i] = Math.random() * Math.PI * 2;
 				this.velocities[i] = 0;
-				this.textureIndexes[i] = _.sample(this.selectedTextures);
+				this.textureIndexes[i] = _.sample(textures);
 			}
 
 			this.geometry.addAttribute('size', new THREE.BufferAttribute(this.sizes, 1));

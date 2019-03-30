@@ -17,6 +17,7 @@ define([
 			fogColor: new THREE.Color(),
 			fogNear: 200,
 			fogFar: 500,
+			availableTextures: _.range(19),
 			pointerPosition: { x: 0, z: 0 },
 			pointerDirection: { x: 0, z: 0 },
 			pointerMoving: false,
