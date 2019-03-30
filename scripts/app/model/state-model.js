@@ -37,6 +37,7 @@ define([
 				fogProps.h += 1;
 			if (fogProps.h - newFogProps.h > 0.5)
 				fogProps.h -= 1;
+			TweenLite.killTweensOf(fogProps);
 			TweenLite.to(fogProps, 3, {
 				h: newFogProps.h,
 				s: newFogProps.s,
