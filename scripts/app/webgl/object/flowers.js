@@ -97,6 +97,7 @@ define([
 			var pointerMoving = StateModel.get('pointerMoving');
 			var pointerRange = StateModel.get('pointerRange');
 			var pointerSpeed = StateModel.get('pointerSpeed');
+			var deltaClamped = Math.min(0.1, delta);
 
 			for (var i = 0; i < this.count; i++) {
 				deltaX = this.positions[i * 3] - pointerPosition.x;
@@ -104,9 +105,9 @@ define([
 				distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 				if (pointerMoving && distance < pointerRange) {
 					cross = pointerDirection.x * (deltaZ / distance) - pointerDirection.z * (deltaX / distance);
-					this.velocities[i] += (1 - distance / pointerRange) * delta * 0.1 * pointerSpeed * cross;
+					this.velocities[i] += (1 - distance / pointerRange) * deltaClamped * 0.1 * pointerSpeed * cross;
 				}
-				this.velocities[i] -= this.velocities[i] * delta * 0.5;
+				this.velocities[i] -= this.velocities[i] * deltaClamped * 0.5;
 				this.rotations[i] += this.velocities[i];
 			}
 
