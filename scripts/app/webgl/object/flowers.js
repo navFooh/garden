@@ -58,6 +58,7 @@ define([
 			this.scales = new Float32Array(this.count);
 			this.positions = new Float32Array(this.count * 3);
 			this.rotations = new Float32Array(this.count);
+			this.velocities = new Float32Array(this.count);
 			this.textureIndexes = new Float32Array(this.count);
 
 			for (var i = 0; i < this.count; i++) {
@@ -67,6 +68,7 @@ define([
 				this.positions[i * 3 + 1] = 0;
 				this.positions[i * 3 + 2] = flowers[i][1] - depth;
 				this.rotations[i] = Math.random() * Math.PI * 2;
+				this.velocities[i] = 0;
 				this.textureIndexes[i] = _.sample(this.selectedTextures);
 			}
 
@@ -89,7 +91,27 @@ define([
 		},
 
 		update: function (delta, elapsed) {
+			var deltaX, deltaZ, distance, cross;
+			var pointerPosition = StateModel.get('pointerPosition');
+			var pointerDirection = StateModel.get('pointerDirection');
+			var pointerMoving = StateModel.get('pointerMoving');
+			var pointerRange = StateModel.get('pointerRange');
+			var pointerSpeed = StateModel.get('pointerSpeed');
 
+			for (var i = 0; i < this.count; i++) {
+				deltaX = this.positions[i * 3] - pointerPosition.x;
+				deltaZ = this.positions[i * 3 + 2] - pointerPosition.z;
+				distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+				if (pointerMoving && distance < pointerRange) {
+					cross = pointerDirection.x * (deltaZ / distance) - pointerDirection.z * (deltaX / distance);
+					this.velocities[i] += (1 - distance / pointerRange) * delta * 0.1 * pointerSpeed * cross;
+				}
+				this.velocities[i] -= this.velocities[i] * delta * 0.5;
+				this.rotations[i] += this.velocities[i];
+			}
+
+			StateModel.set('pointerMoving', false);
+			this.geometry.attributes.rotation.needsUpdate = true;
 		}
 	});
 });
