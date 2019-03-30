@@ -73,7 +73,7 @@ define([
 			};
 			TweenLite.to(transition, 3, {
 				radius: Math.sqrt(width * width + depth * depth),
-				ease: Power1.easeInOut,
+				ease: Power1.easeIn,
 				onComplete: transitions.pop,
 				onCompleteScope: transitions
 			});
