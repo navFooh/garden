@@ -16,10 +16,16 @@ define([
 			fogProps: null,
 			fogColor: new THREE.Color(),
 			fogNear: 200,
-			fogFar: 500
+			fogFar: 500,
+			pointerPosition: { x: 0, z: 0 },
+			pointerDirection: { x: 0, z: 0 },
+			pointerMoving: false,
+			pointerRange: 50,
+			pointerSpeed: 0
 		},
 
 		initialize: function () {
+			this.pointerInitialized = false;
 			this.set({ fogProps: this.getNewFogProps() });
 			this.updateFogColor();
 		},
@@ -57,6 +63,34 @@ define([
 		},
 
 		updatePointer: function (x, z) {
+			var pointerPosition = this.get('pointerPosition');
+			var pointerDirection = this.get('pointerDirection');
+
+			if (!this.pointerInitialized) {
+				this.pointerInitialized = true;
+				pointerPosition.x = x;
+				pointerPosition.z = z;
+				return;
+			}
+
+			if (pointerPosition.x == x && pointerPosition.z == z) {
+				return;
+			}
+
+			pointerDirection.x = x - pointerPosition.x;
+			pointerDirection.z = z - pointerPosition.z;
+			pointerPosition.x = x;
+			pointerPosition.z = z;
+
+			var pointerSpeed = Math.sqrt(pointerDirection.x * pointerDirection.x + pointerDirection.z * pointerDirection.z);
+
+			pointerDirection.x /= pointerSpeed;
+			pointerDirection.z /= pointerSpeed;
+
+			this.set({
+				pointerMoving: true,
+				pointerSpeed: pointerSpeed
+			});
 		}
 	});
 
