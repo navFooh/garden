@@ -96,6 +96,7 @@ define([
 			var i, j, deltaX, deltaZ, distance, cross;
 			var transitions = StateModel.get('transitions');
 			var transitionsLength = transitions.length;
+			var transitionRange = StateModel.get('transitionRange');
 			var pointerPosition = StateModel.get('pointerPosition');
 			var pointerDirection = StateModel.get('pointerDirection');
 			var pointerMoving = StateModel.get('pointerMoving');
@@ -107,13 +108,15 @@ define([
 
 				// transition influence
 				for (j = 0; j < transitionsLength; j++) {
-					if (this.transitionIds[i] == transitions[j].id) break;
 					deltaX = this.positions[i * 3] - transitions[j].position.x;
 					deltaZ = this.positions[i * 3 + 2] - transitions[j].position.z;
 					distance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 					if (distance < transitions[j].radius) {
-						this.transitionIds[i] = transitions[j].id;
-						this.textureIndexes[i] = _.sample(transitions[j].textures);
+						if (this.transitionIds[i] != transitions[j].id) {
+							this.transitionIds[i] = transitions[j].id;
+							this.textureIndexes[i] = _.sample(transitions[j].textures);
+						}
+						this.scales[i] = Math.min(transitions[j].radius - distance, transitionRange) / transitionRange;
 						break;
 					}
 				}
@@ -136,6 +139,7 @@ define([
 			this.geometry.attributes.rotation.needsUpdate = true;
 
 			if (transitionsLength) {
+				this.geometry.attributes.scale.needsUpdate = true;
 				this.geometry.attributes.textureIndex.needsUpdate = true;
 			}
 		}

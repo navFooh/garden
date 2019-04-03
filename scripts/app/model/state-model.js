@@ -19,6 +19,7 @@ define([
 			fogFar: 500,
 			transitions: [],
 			transitionId: 0,
+			transitionRange: 15,
 			availableTextures: _.range(19),
 			pointerPosition: { x: 0, z: 0 },
 			pointerDirection: { x: 0, z: 0 },
