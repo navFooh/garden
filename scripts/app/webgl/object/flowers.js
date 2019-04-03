@@ -96,7 +96,8 @@ define([
 			var i, j, deltaX, deltaZ, distance, cross;
 			var transitions = StateModel.get('transitions');
 			var transitionsLength = transitions.length;
-			var transitionRange = StateModel.get('transitionRange');
+			var transitionInRange = StateModel.get('transitionInRange');
+			var transitionOutRange = StateModel.get('transitionOutRange');
 			var pointerPosition = StateModel.get('pointerPosition');
 			var pointerDirection = StateModel.get('pointerDirection');
 			var pointerMoving = StateModel.get('pointerMoving');
@@ -116,7 +117,7 @@ define([
 							this.transitionIds[i] = transitions[j].id;
 							this.textureIndexes[i] = _.sample(transitions[j].textures);
 						}
-						this.scales[i] = Math.min(transitions[j].radius - distance, transitionRange) / transitionRange;
+						this.scales[i] = Math.min(transitions[j].radius - distance, transitionInRange) / transitionInRange;
 						break;
 					}
 				}
