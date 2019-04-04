@@ -67,6 +67,7 @@ define([
 			var transition = {
 				id: transitionId,
 				radius: 0,
+				outRange: 0,
 				position: {
 					x: pointerPosition.x,
 					z: pointerPosition.z
@@ -75,9 +76,13 @@ define([
 			};
 			TweenLite.to(transition, 3, {
 				radius: Math.sqrt(width * width + depth * depth),
-				ease: Power1.easeIn,
+				ease: Power2.easeIn,
 				onComplete: transitions.pop,
 				onCompleteScope: transitions
+			});
+			TweenLite.to(transition, 0.5, {
+				outRange: this.get('transitionOutRange'),
+				ease: Power2.easeOut
 			});
 			transitions.unshift(transition);
 		},
