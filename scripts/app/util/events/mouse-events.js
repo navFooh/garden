@@ -3,9 +3,11 @@ define(['backbone-util'], function (Util) {
 	return Util.extend({
 
 		EVENT: {
-			DOWN: 0,
-			MOVE: 1,
-			UP: 2
+			ENTER: 0,
+			LEAVE: 1,
+			DOWN: 2,
+			MOVE: 3,
+			UP: 4
 		},
 
 		initialize: function (element) {
@@ -14,21 +16,27 @@ define(['backbone-util'], function (Util) {
 
 			this.buttons = [];
 
+			this.onEnter = this.trigger.bind(this, this.EVENT.ENTER);
+			this.onLeave = this.trigger.bind(this, this.EVENT.LEAVE);
 			this.onDown = this.onDown.bind(this);
 			this.onMove = this.onMove.bind(this);
 			this.onUp = this.onUp.bind(this);
 
+			this.element.addEventListener('mouseenter', this.onEnter);
+			this.element.addEventListener('mouseleave', this.onLeave);
+			this.element.addEventListener('mouseleave', this.onUp);
 			this.element.addEventListener('mousedown', this.onDown);
 			this.element.addEventListener('mousemove', this.onMove);
 			this.element.addEventListener('mouseup', this.onUp);
-			this.element.addEventListener('mouseleave', this.onUp);
 		},
 
 		remove: function () {
+			this.element.removeEventListener('mouseenter', this.onEnter);
+			this.element.removeEventListener('mouseleave', this.onLeave);
+			this.element.removeEventListener('mouseleave', this.onUp);
 			this.element.removeEventListener('mousedown', this.onDown);
 			this.element.removeEventListener('mousemove', this.onMove);
 			this.element.removeEventListener('mouseup', this.onUp);
-			this.element.removeEventListener('mouseleave', this.onUp);
 			Util.prototype.remove.apply(this);
 		},
 
