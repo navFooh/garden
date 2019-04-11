@@ -28,15 +28,15 @@ define([
 		*/
 
 		EVENT: {
-			DOWN: 0,
-			MOVE: 1,
-			UP: 2,
-			PINCH_START: 3,
-			PINCH_MOVE: 4,
-			PINCH_END: 5,
-			WHEEL: 6,
-			CLICK: 7,
-			DOUBLE_CLICK: 8
+			CHANGE: 0,
+			DOWN: 1,
+			MOVE: 2,
+			UP: 3,
+			PINCH_START: 4,
+			PINCH_MOVE: 5,
+			PINCH_END: 6,
+			WHEEL: 7,
+			CLICK: 8
 		},
 
 		defaults: {
@@ -48,10 +48,7 @@ define([
 		},
 
 		initialize: function () {
-			this.mouseEventsTimeoutId = null;
-			this.mouseEventsTimeoutFn = this.listenToMouseEvents.bind(this);
 			this.onClick = this.trigger.bind(this, this.EVENT.CLICK);
-			this.onDoubleClick = this.trigger.bind(this, this.EVENT.DOUBLE_CLICK);
 			this.on('change:element', this.onChangeElement);
 		},
 
@@ -59,9 +56,7 @@ define([
 
 			if (this.previous('element')) {
 				this.previous('element').removeEventListener('click', this.onClick);
-				this.previous('element').removeEventListener('dblclick', this.onDoubleClick);
 				this.stopListening();
-				this.stopMouseEventsTimeout();
 				this.pointerEvents && this.pointerEvents.remove();
 				this.touchEvents && this.touchEvents.remove();
 				this.mouseEvents && this.mouseEvents.remove();
@@ -77,12 +72,14 @@ define([
 			if (!element) return;
 
 			element.addEventListener('click', this.onClick);
-			element.addEventListener('dblclick', this.onDoubleClick);
 
 			if (PointerEvents.isSupported) {
 				this.pointerEvents = new PointerEvents(element);
 				this.listenToPointerEvents();
 			} else {
+				this.touchDown = false;
+				this.mouseDown = false;
+				this.mouseEventCache = null;
 				this.touchEvents = new TouchEvents(element);
 				this.mouseEvents = new MouseEvents(element);
 				this.listenToTouchEvents();
@@ -101,30 +98,30 @@ define([
 		},
 
 		listenToTouchEvents: function () {
-			this.listenTo(this.touchEvents, this.touchEvents.EVENT.MOVE, this.onPointersMove);
-			this.listenTo(this.touchEvents, this.touchEvents.EVENT.DOWN, this.onPointersChange);
+			this.listenTo(this.touchEvents, this.touchEvents.EVENT.MOVE, this.onTouchMove);
 			this.listenTo(this.touchEvents, this.touchEvents.EVENT.DOWN, this.onTouchDown);
-			this.listenTo(this.touchEvents, this.touchEvents.EVENT.UP, this.onPointersChange);
 			this.listenTo(this.touchEvents, this.touchEvents.EVENT.UP, this.onTouchUp);
 		},
 
 		listenToMouseEvents: function () {
-			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.MOVE, this.onPointerMove);
+			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.ENTER, this.onMouseEnter);
+			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.LEAVE, this.onMouseLeave);
+			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.MOVE, this.onMouseMove);
 			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.DOWN, this.onMouseDown);
 			this.listenTo(this.mouseEvents, this.mouseEvents.EVENT.UP, this.onMouseUp);
 		},
 
-		startMouseEventsTimeout: function () {
-			this.mouseEventsTimeoutId = setTimeout(this.mouseEventsTimeoutFn, 500);
+		hitTest: function (pointer) {
+			var element = this.get('element');
+			var rect = element && element.getBoundingClientRect();
+			return !!rect
+				&& pointer.clientX >= rect.left
+				&& pointer.clientX <= rect.left + rect.width
+				&& pointer.clientY >= rect.top
+				&& pointer.clientY <= rect.top + rect.height;
 		},
 
-		stopMouseEventsTimeout: function () {
-			if (!this.mouseEventsTimeoutId) return;
-			clearTimeout(this.mouseEventsTimeoutId);
-			this.mouseEventsTimeoutId = null;
-		},
-
-		// HANDLE POINTER UP AND DOWN
+		// HANDLE POINTER EVENTS
 
 		onPointerDown: function (pointer, first) {
 			first && this.trigger(this.EVENT.DOWN, { button: pointer.button, target: pointer.target });
@@ -134,33 +131,81 @@ define([
 			last && this.trigger(this.EVENT.UP, { button: pointer.button, target: pointer.target });
 		},
 
-		// HANDLE TOUCH UP AND DOWN
+		// HANDLE TOUCH EVENTS
 
-		onTouchDown: function (touches, changedTouches, first) {
-			if (first) {
-				this.trigger(this.EVENT.DOWN, { button: 0, target: changedTouches[0].target });
-				this.stopListening(this.mouseEvents);
-				this.stopMouseEventsTimeout();
+		onTouchMove: function (event) {
+			event.preventDefault();
+			this.touchDown && this.onPointersMove(event.touches);
+		},
+
+		onTouchDown: function (event, first) {
+			event.preventDefault();
+			if (!this.mouseDown && first) {
+				this.touchDown = true;
+			}
+			if (this.touchDown) {
+				this.onPointersChange(event.touches);
+				first && this.trigger(this.EVENT.DOWN, { button: 0, target: event.changedTouches[0].target });
 			}
 		},
 
-		onTouchUp: function (touches, changedTouches, last) {
-			if (last) {
-				this.trigger(this.EVENT.UP, { button: 0, target: changedTouches[0].target });
-				this.startMouseEventsTimeout();
+		onTouchUp: function (event, last) {
+			event.preventDefault();
+			if (this.touchDown) {
+				this.onPointersChange(event.touches);
+				if (last) {
+					this.touchDown = false;
+					this.trigger(this.EVENT.UP, { button: 0, target: event.changedTouches[0].target });
+					this.hitTest(event.changedTouches[0]) && this.trigger(this.EVENT.CLICK, event.changedTouches[0]);
+					this.recoverMouse();
+				}
 			}
 		},
 
-		// HANDLE MOUSE UP AND DOWN
+		// HANDLE MOUSE EVENTS
+
+		cacheMouseEvent: function (event) {
+			this.mouseEventCache = event ? {
+				clientX: event.clientX,
+				clientY: event.clientY
+			} : null;
+		},
+
+		recoverMouse: function () {
+			this.mouseEventCache && this.onPointersChange([this.mouseEventCache]);
+		},
+
+		onMouseEnter: function (event) {
+			this.touchDown
+				? this.cacheMouseEvent(event)
+				: this.onPointersChange([event]);
+		},
+
+		onMouseLeave: function () {
+			this.touchDown
+				? this.cacheMouseEvent(null)
+				: this.onPointersChange([]);
+
+		},
+
+		onMouseMove: function (event) {
+			this.touchDown
+				? this.cacheMouseEvent(event)
+				: this.onPointerMove(event);
+		},
 
 		onMouseDown: function (event) {
-			this.trigger(this.EVENT.DOWN, { button: event.button, target: event.target });
-			this.stopListening(this.touchEvents);
+			if (!this.touchDown) {
+				this.mouseDown = true;
+				this.trigger(this.EVENT.DOWN, { button: event.button, target: event.target });
+			}
 		},
 
 		onMouseUp: function (event) {
-			this.trigger(this.EVENT.UP, { button: event.button, target: event.target });
-			event.buttons == 0 && this.listenToTouchEvents();
+			if (this.mouseDown) {
+				this.mouseDown = false;
+				this.trigger(this.EVENT.UP, { button: event.button, target: event.target });
+			}
 		},
 
 		// HANDLE PINCH START, MOVE & END
@@ -199,6 +244,7 @@ define([
 		onPointersChange: function (pointers) {
 			this.setPointer(this.getAverage(pointers));
 			this.setPinching(pointers);
+			this.trigger(this.EVENT.CHANGE);
 		},
 
 		onPointersMove: function (pointers) {

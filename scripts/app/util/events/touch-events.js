@@ -31,19 +31,19 @@ define(['backbone-util'], function (Util) {
 		},
 
 		onStart: function (event) {
-			this.trigger(this.EVENT.DOWN, event.touches, event.changedTouches, !this.active);
+			this.trigger(this.EVENT.DOWN, event, !this.active);
 			this.active = true;
 		},
 
 		onMove: function (event) {
-			this.trigger(this.EVENT.MOVE, event.touches);
+			this.trigger(this.EVENT.MOVE, event);
 		},
 
 		onEnd: function (event) {
 			if (!this.active) return;
 			var last = event.touches.length == 0;
 			if (last) this.active = false;
-			this.trigger(this.EVENT.UP, event.touches, event.changedTouches, last);
+			this.trigger(this.EVENT.UP, event, last);
 		}
 	});
 });
