@@ -123,12 +123,12 @@ define([
 
 		// HANDLE POINTER EVENTS
 
-		onPointerDown: function (pointer, first) {
-			first && this.trigger(this.EVENT.DOWN, { button: pointer.button, target: pointer.target });
+		onPointerDown: function (button, target, first) {
+			first && this.trigger(this.EVENT.DOWN, { button: button, target: target });
 		},
 
-		onPointerUp: function (pointer, last) {
-			last && this.trigger(this.EVENT.UP, { button: pointer.button, target: pointer.target });
+		onPointerUp: function (button, target, last) {
+			last && this.trigger(this.EVENT.UP, { button: button, target: target });
 		},
 
 		// HANDLE TOUCH EVENTS
@@ -157,7 +157,7 @@ define([
 					this.touchDown = false;
 					this.trigger(this.EVENT.UP, { button: 0, target: event.changedTouches[0].target });
 					this.hitTest(event.changedTouches[0]) && this.trigger(this.EVENT.CLICK, event.changedTouches[0]);
-					this.recoverMouse();
+					this.recoverMouseEvent();
 				}
 			}
 		},
@@ -171,41 +171,40 @@ define([
 			} : null;
 		},
 
-		recoverMouse: function () {
+		recoverMouseEvent: function () {
 			this.mouseEventCache && this.onPointersChange([this.mouseEventCache]);
 		},
 
 		onMouseEnter: function (event) {
-			this.touchDown
-				? this.cacheMouseEvent(event)
-				: this.onPointersChange([event]);
+			this.cacheMouseEvent(event);
+			!this.touchDown && this.onPointersChange([event]);
 		},
 
 		onMouseLeave: function () {
-			this.touchDown
-				? this.cacheMouseEvent(null)
-				: this.onPointersChange([]);
+			this.cacheMouseEvent(null);
+			!this.touchDown && this.onPointersChange([]);
 
 		},
 
 		onMouseMove: function (event) {
-			this.touchDown
-				? this.cacheMouseEvent(event)
-				: this.onPointerMove(event);
+			this.cacheMouseEvent(event);
+			!this.touchDown && this.onPointerMove(event);
 		},
 
-		onMouseDown: function (event) {
-			if (!this.touchDown) {
+		onMouseDown: function (button, target) {
+			if (button == 0) {
+				if (this.touchDown) return;
 				this.mouseDown = true;
-				this.trigger(this.EVENT.DOWN, { button: event.button, target: event.target });
 			}
+			this.trigger(this.EVENT.DOWN, { button: button, target: target });
 		},
 
-		onMouseUp: function (event) {
-			if (this.mouseDown) {
+		onMouseUp: function (button, target) {
+			if (button == 0) {
+				if (!this.mouseDown) return;
 				this.mouseDown = false;
-				this.trigger(this.EVENT.UP, { button: event.button, target: event.target });
 			}
+			this.trigger(this.EVENT.UP, { button: button, target: target });
 		},
 
 		// HANDLE PINCH START, MOVE & END

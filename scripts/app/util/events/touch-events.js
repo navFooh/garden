@@ -12,6 +12,8 @@ define(['backbone-util'], function (Util) {
 			if (!element) throw 'Supply a target element for TouchEvents';
 			this.element = element;
 
+			this.active = false;
+
 			this.onStart = this.onStart.bind(this);
 			this.onMove = this.onMove.bind(this);
 			this.onEnd = this.onEnd.bind(this);
