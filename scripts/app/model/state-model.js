@@ -102,7 +102,7 @@ define([
 			this.trigger(this.UPDATE.FOG_COLOR, fogColor);
 		},
 
-		updatePointer: function (x, z) {
+		updatePointer: function (x, z, ignoreDelta) {
 			var pointerPosition = this.get('pointerPosition');
 			var pointerDirection = this.get('pointerDirection');
 
@@ -128,7 +128,7 @@ define([
 			pointerDirection.z /= pointerSpeed;
 
 			this.set({
-				pointerMoving: true,
+				pointerMoving: !ignoreDelta,
 				pointerSpeed: pointerSpeed
 			});
 		}

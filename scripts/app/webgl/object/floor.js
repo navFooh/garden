@@ -25,9 +25,15 @@ define([
 			this.pointer = new THREE.Vector2();
 			this.raycaster = new THREE.Raycaster();
 			this.intersects = [];
+			this.ignoreNextDelta = false;
 
+			this.listenTo(PointerModel, PointerModel.EVENT.CHANGE, this.onPointerChange);
 			this.listenTo(PointerModel, PointerModel.EVENT.CLICK, this.onPointerClick);
 			this.listenTo(WebGLModel, 'update', this.update);
+		},
+
+		onPointerChange: function () {
+			this.ignoreNextDelta = true;
 		},
 
 		onPointerClick: function () {
@@ -44,7 +50,10 @@ define([
 			if (this.intersects.length) {
 				var x = this.intersects[0].point.x;
 				var z = this.intersects[0].point.z;
-				StateModel.updatePointer(x, z);
+				StateModel.updatePointer(x, z, this.ignoreNextDelta);
+				this.ignoreNextDelta = false;
+			} else {
+				this.ignoreNextDelta = true;
 			}
 		}
 	});
