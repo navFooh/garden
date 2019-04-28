@@ -11,8 +11,7 @@ define([
 		},
 
 		defaults: {
-			width: 800,
-			depth: 400,
+			radius: 400,
 			fogProps: null,
 			fogColor: new THREE.Color(),
 			fogNear: 200,
@@ -54,8 +53,7 @@ define([
 			});
 
 			// texture transition
-			var width = this.get('width');
-			var depth = this.get('depth');
+			var radius = this.get('radius');
 			var transitions = this.get('transitions');
 			var transitionId = this.get('transitionId');
 			var pointerPosition = this.get('pointerPosition');
@@ -75,7 +73,7 @@ define([
 				textures: _.sample(availableTextures, 3)
 			};
 			TweenLite.to(transition, 3, {
-				radius: Math.sqrt(width * width + depth * depth),
+				radius: radius * 2,
 				ease: Power2.easeIn,
 				onComplete: transitions.pop,
 				onCompleteScope: transitions

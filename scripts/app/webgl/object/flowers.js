@@ -40,11 +40,15 @@ define([
 		},
 
 		createFlowers: function () {
-			var width = StateModel.get('width');
-			var depth = StateModel.get('depth');
+			var x, z;
+			var radius = StateModel.get('radius');
 			var spacing = 5;
-			var poisson = new PoissonDiskSampling([width, depth], spacing);
-			var flowers = poisson.fill();
+			var poisson = new PoissonDiskSampling([radius * 2, radius], spacing);
+			var flowers = poisson.fill().filter(function (flower) {
+				x = flower[0] - radius;
+				z = flower[1] - radius;
+				return Math.sqrt(x * x + z * z) < radius;
+			});
 
 			flowers.sort(function (a, b) {
 				return a[1] - b[1];
@@ -65,9 +69,9 @@ define([
 			for (var i = 0; i < this.count; i++) {
 				this.sizes[i] = 75 + 50 * Math.random();
 				this.scales[i] = 1;
-				this.positions[i * 3] = flowers[i][0] - width * 0.5;
+				this.positions[i * 3] = flowers[i][0] - radius;
 				this.positions[i * 3 + 1] = 0;
-				this.positions[i * 3 + 2] = flowers[i][1] - depth;
+				this.positions[i * 3 + 2] = flowers[i][1] - radius;
 				this.rotations[i] = Math.random() * Math.PI * 2;
 				this.velocities[i] = 0;
 				this.transitionIds[i] = transitionId;
