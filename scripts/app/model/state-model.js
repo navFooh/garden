@@ -89,7 +89,7 @@ define([
 			var fogProps = this.get('fogProps');
 			return {
 				h: fogProps ? (fogProps.h + 0.25 + Math.random() * 0.5) % 1 : Math.random(),
-				s: 0.25 + 0.25 * Math.random(),
+				s: 0.1 + 0.3 * Math.random(),
 				l: 0.6 + 0.3 * Math.random()
 			}
 		},
