@@ -10,10 +10,8 @@ define([
 
 		initialize: function (options) {
 
-			WebGLModel.set({
-				scene: new Scene(),
-				camera: new Camera()
-			});
+			WebGLModel.set('camera', new Camera());
+			WebGLModel.set('scene', new Scene());
 
 			this.renderer = new Renderer({ canvas: options.canvas });
 		}
