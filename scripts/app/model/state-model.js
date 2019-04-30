@@ -43,11 +43,11 @@ define([
 				fogProps.h += 1;
 			if (fogProps.h - newFogProps.h > 0.5)
 				fogProps.h -= 1;
-			TweenLite.to(fogProps, 2, {
+			TweenLite.to(fogProps, 1, {
 				h: newFogProps.h,
 				s: newFogProps.s,
 				l: newFogProps.l,
-				ease: Power3.easeInOut,
+				ease: Power1.easeOut,
 				onUpdate: this.updateFogColor,
 				onUpdateScope: this
 			});
