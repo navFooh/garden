@@ -14,7 +14,7 @@ define([
 			radius: 400,
 			fogProps: null,
 			fogColor: new THREE.Color(),
-			fogNear: 200,
+			fogNear: 300,
 			fogFar: 500,
 			transitions: [],
 			transitionId: 0,
