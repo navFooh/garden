@@ -15,6 +15,7 @@ require.config({
 		'TimelineLite':         '../node_modules/gsap/src/uncompressed/TimelineLite',
 		'TimelineMax':          '../node_modules/gsap/src/uncompressed/TimelineMax',
 		'dat.gui':				'../node_modules/dat.gui/build/dat.gui',
+		'stats':	            '../node_modules/stats.js/build/stats.min',
 		'three-lib':            '../node_modules/three/build/three',
 		'three-gltf-loader':    '../node_modules/three/examples/js/loaders/GLTFLoader',
 		'three-bokeh-shader':   '../node_modules/three/examples/js/shaders/BokehShader',

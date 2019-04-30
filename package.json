@@ -27,6 +27,7 @@
     "promise-polyfill": "^8.1.0",
     "requirejs": "^2.3.6",
     "requirejs-plugins": "^1.0.2",
+    "stats.js": "^0.17.0",
     "three": "^0.103.0",
     "underscore": "^1.9.1",
     "yargs": "^13.2.2"

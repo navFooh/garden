@@ -1,7 +1,8 @@
 define([
 	'backbone',
+	'stats',
 	'three'
-], function (Backbone, THREE) {
+], function (Backbone, Stats, THREE) {
 
 	var clock = new THREE.Clock(false),
 		requestId = null,
@@ -14,6 +15,13 @@ define([
 
 			initialize: function () {
 				this.loop = this.loop.bind(this);
+				this.stats = null;
+			},
+
+			createStats: function () {
+				this.stats = new Stats();
+				this.stats.showPanel(1);
+				return this.stats.dom;
 			},
 
 			start: function () {
@@ -30,16 +38,25 @@ define([
 			},
 
 			loop: function () {
+				// request next loop
 				requestId = requestAnimationFrame(this.loop);
+
+				// begin measuring stats
+				this.stats && this.stats.begin();
+
 				// trigger update event
 				var delta = clock.getDelta(),
 					elapsed = clock.elapsedTime;
 				this.trigger('update', delta, elapsed);
+
 				// trigger render event
 				var scene = this.get('scene'),
 					camera = this.get('camera');
 				if (!scene || !camera) return;
 				this.trigger('render', scene.scene, camera.camera);
+
+				// end measuring stats
+				this.stats && this.stats.end();
 			}
 		});
 
