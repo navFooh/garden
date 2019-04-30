@@ -3,12 +3,13 @@ define([
 	'three',
 	'underscore',
 	'model/asset-model',
+	'model/display-model',
 	'model/state-model',
 	'model/webgl-model',
 	'util/poisson/poisson-disk-sampling',
 	'text!shaders/flower.vert',
 	'text!shaders/flower.frag'
-], function (WebGL, THREE, _, AssetModel, StateModel, WebGLModel, PoissonDiskSampling, flowerVert, flowerFrag) {
+], function (WebGL, THREE, _, AssetModel, DisplayModel, StateModel, WebGLModel, PoissonDiskSampling, flowerVert, flowerFrag) {
 
 	return WebGL.extend({
 
@@ -16,6 +17,7 @@ define([
 			this.geometry = new THREE.BufferGeometry();
 			this.material = new THREE.ShaderMaterial({
 				uniforms: {
+					fovCorrection:	{ value: null },
 					texture: 		{ value: null },
 					textureCols: 	{ value: 4 },
 					textureRows: 	{ value: 5 },
@@ -35,7 +37,9 @@ define([
 
 			this.createFlowers();
 			this.loadTextures();
+			this.onResize();
 
+			this.listenTo(DisplayModel, 'resize', this.onResize);
 			this.listenTo(WebGLModel, 'update', this.update);
 		},
 
@@ -94,6 +98,12 @@ define([
 		onLoadTexture: function (texture) {
 			texture.flipY = false;
 			this.material.uniforms.texture.value = texture;
+		},
+
+		onResize: function () {
+			var fov = WebGLModel.get('camera').camera.fov;
+			var height = DisplayModel.get('height');
+			this.material.uniforms.fovCorrection.value = Math.tan((Math.PI / 180) * fov / 2) / height;
 		},
 
 		update: function (delta, elapsed) {

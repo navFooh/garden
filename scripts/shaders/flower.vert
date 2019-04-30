@@ -1,3 +1,5 @@
+uniform float fovCorrection;
+
 attribute float size;
 attribute float scale;
 attribute float rotation;
@@ -12,6 +14,6 @@ void main() {
 
   vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-  gl_PointSize = size * scale * (300.0 / length(mvPosition.xyz));
+  gl_PointSize = (size * scale) / fovCorrection / -mvPosition.z;
   gl_Position = projectionMatrix * mvPosition;
 }
